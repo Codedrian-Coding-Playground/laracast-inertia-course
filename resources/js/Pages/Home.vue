@@ -1,14 +1,25 @@
 <script setup>
+import { Head } from '@inertiajs/vue3';
 import Greeting from '../components/Greeting.vue';
+import { ref } from 'vue'
+
 defineProps({
     profileUrl: String
 })
+const messages = ref([
+    'Hello',
+    'Hi'
+]);
 </script>
 
 <template>
-<h1 class="text-red-600">This is Home</h1>
-    <Greeting></Greeting>
-<a :href="profileUrl" class="hover:bg-blue-700">Click to go to Profile page</a>
+    <Head>
+        <title>Dashboard</title>
+        <meta name="description" content="Your page description">
+    </Head>
+    <div  v-for="message in messages">
+        <Greeting :message="message"/>
+    </div>
 </template>
 <style scoped>
 

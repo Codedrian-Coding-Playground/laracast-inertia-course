@@ -1,9 +1,12 @@
 <script setup>
-
+defineProps({
+    message: String
+})
 </script>
 
 <template>
-<p>Hello, this is the Greeting component</p>
+<p>{{ message }}</p>
+    <slot></slot>
 </template>
 
 <style scoped>

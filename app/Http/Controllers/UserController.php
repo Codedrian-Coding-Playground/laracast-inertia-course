@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $profileUrl = route('profile');
-        return Inertia::render('Home', ['profileUrl' => $profileUrl]);
+        return Inertia::render('Home', ['isActive' => 'dashboard']);
     }
 }
