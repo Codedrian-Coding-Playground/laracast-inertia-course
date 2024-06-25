@@ -16,6 +16,8 @@
     "dependencies": {
         "@inertiajs/vue3": "^1.2.0",
         "@vitejs/plugin-vue": "^5.0.5",
+        "laravel-precognition-vue": "^0.5.5",
+        "laravel-precognition-vue-inertia": "^0.5.5",
         "vue": "^3.4.30"
     }
 }

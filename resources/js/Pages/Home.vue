@@ -1,25 +1,22 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
-import Greeting from '../components/Greeting.vue';
+import {Head, Link} from '@inertiajs/vue3';
 import { ref } from 'vue'
 
 defineProps({
     profileUrl: String
 })
-const messages = ref([
-    'Hello',
-    'Hi'
-]);
+const username = ref();
+const password = ref();
+const checked = ref();
 </script>
 
 <template>
     <Head>
-        <title>Dashboard</title>
-        <meta name="description" content="Your page description">
+        <title>| Dashboard</title>
+        <meta name="description" content="This page is home dashboard">
     </Head>
-    <div  v-for="message in messages">
-        <Greeting :message="message"/>
-    </div>
+
+
 </template>
 <style scoped>
 
