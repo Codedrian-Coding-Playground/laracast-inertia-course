@@ -1,9 +1,8 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 import { useForm } from 'laravel-precognition-vue-inertia';
-import { reactive } from 'vue';
 
-const form = useForm('post', '/register', {
+const form = useForm('post', '/users', {
     firstName: '',
     lastName: '',
     email: '',
@@ -56,7 +55,6 @@ const submit = () => form.submit({
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
                     focus:shadow-outline" id="username" type="text" placeholder="john.doe@gmail.com"
                     :class="{'outline-green-500': form.valid('email'), 'outline-red-500': form.invalid('email')}">
-
                 <div v-if="form.invalid('email')" class="text-red-500">
                     {{ form.errors.email }}
                 </div>
@@ -67,19 +65,24 @@ const submit = () => form.submit({
                 </label>
                 <input
                     v-model="form.password"
+                    @change="form.validate('password')"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none
                     focus:shadow-outline" id="password" type="password" placeholder="******************">
+                <div v-if="form.invalid('email')" class="text-red-500">
+                    {{ form.errors.password }}
+                </div>
             </div>
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col items-center justify-between">
                 <button type="submit"
                         :disabled="form.processing"
                         :class="{'bg-gray-500 cursor-not-allowed': form.processing }"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="w-full mb-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Sign In
                 </button>
-                <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-                    Forgot Password?
-                </a>
+                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                    Already have an account? <Link :href="route('login')" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login
+                    here</Link>
+                </p>
             </div>
         </form>
     </div>
