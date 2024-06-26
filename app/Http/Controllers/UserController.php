@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -19,19 +21,15 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(CreateUserRequest $request)
-    {
-        $validated = $request->validated();
-        $user = (new User())->store($validated);
-        dd($user);
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store()
+    public function store(CreateUserRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $user = (new User())->store($validated);
     }
 
     /**
@@ -64,5 +62,36 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Custom method: Authenticate the user.
+     */
+    public function login(AuthenticateUserRequest $request)
+    {
+        $credentials = $request->validated();
+        if (Auth::attempt($credentials, $request->remember_me)) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('/');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    /**
+     * Custom method: Logout user
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }
