@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'firstName',
         'lastName',
+        'avatar_path',
         'email',
         'password',
     ];
@@ -34,6 +35,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function store($validatedData)
+    {
+        return User::create($validatedData);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -45,10 +51,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function store($validatedData)
-    {
-        return User::create($validatedData);
     }
 }

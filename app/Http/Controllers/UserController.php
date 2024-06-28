@@ -7,6 +7,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -21,7 +22,9 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {}
+    public function create()
+    {
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -29,7 +32,13 @@ class UserController extends Controller
     public function store(CreateUserRequest $request)
     {
         $validated = $request->validated();
-        $user = (new User())->store($validated);
+        if ($request->hasFile('avatar_path')) {
+            $validated['avatar_path'] = Storage::disk('public')->put('avatars', $request->file('avatar_path'));
+        }
+        $result = (new User())->store($validated);
+        if ($result) {
+            return to_route('dashboard');
+        }
     }
 
     /**
