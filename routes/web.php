@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        sleep(1);
-
         return inertia('Home', [
             'isActive' => 'dashboard',
         ]);
