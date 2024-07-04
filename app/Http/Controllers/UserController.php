@@ -14,9 +14,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() /*/users*/
     {
-        //
+        $response = (new User())->index();
+        dd($response);
     }
 
     /**
@@ -82,7 +83,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials, $request->remember_me)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/');
+            return redirect()->intended('/')->with('greet', 'Welcome to Laravel Inertia domain,');
         }
 
         return back()->withErrors([

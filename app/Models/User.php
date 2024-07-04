@@ -40,6 +40,11 @@ class User extends Authenticatable
         return User::create($validatedData);
     }
 
+    public function index()
+    {
+        return $response = User::paginate(5);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

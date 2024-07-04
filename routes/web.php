@@ -1,15 +1,12 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return inertia('Home', [
-            'isActive' => 'dashboard',
-        ]);
-    })->name('dashboard');
+    Route::inertia('/', 'Home', ['users' => User::paginate(3)])->name('dashboard');
     Route::get('/profile', function () {
         return inertia('Profile', [
             'isActive' => 'profile',
