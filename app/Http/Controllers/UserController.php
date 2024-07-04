@@ -18,7 +18,9 @@ class UserController extends Controller
     {
         return inertia('Home', [
             'users' => User::query()->when($request->search, function ($query) use ($request) {
-                $query->where('firstName', 'LIKE', '%' . $request->search . '%');
+                $query
+                    ->where('firstName', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
             })->paginate(5)->withQueryString(),
             'searchValue' => $request->Search
         ]);
