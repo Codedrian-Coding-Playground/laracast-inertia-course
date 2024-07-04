@@ -14,10 +14,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() /*/users*/
+    public function index(Request $request)
     {
-        $response = (new User())->index();
-        dd($response);
+        return inertia('Home', [
+            'users' => User::query()->when($request->search, function ($query) use ($request) {
+                $query->where('firstName', 'LIKE', '%' . $request->search . '%');
+            })->paginate(5)->withQueryString(),
+            'searchValue' => $request->Search
+        ]);
     }
 
     /**

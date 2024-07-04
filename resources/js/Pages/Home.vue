@@ -1,6 +1,7 @@
 <script setup>
-import { Head, Link, usePage } from "@inertiajs/vue3";
-import { computed, onMounted } from "vue";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { computed, ref, watch } from "vue";
+import { debounce } from "lodash";
 
 const name = computed(() => {
     return usePage().props.auth.user.firstName;
@@ -11,10 +12,30 @@ const isLoggedIn = computed(() => {
 defineProps({
     users: {
         type: Object,
-        required: true,
     },
+    searchValue: {
+        type: String,
+    },
+    errors: Array,
+    flash: String,
+    auth: Object,
 });
-onMounted(() => {});
+
+const search = ref("");
+watch(
+    search,
+    debounce(
+        (user) =>
+            router.get(
+                "/",
+                {
+                    search: user,
+                },
+                { preserveState: true },
+            ),
+        500,
+    ),
+);
 </script>
 
 <template>
@@ -37,8 +58,51 @@ onMounted(() => {});
             >Logout
         </Link>
     </div>
-
-    <div class="w-3/5 mx-auto relative overflow-x-auto shadow-md sm:rounded-lg">
+    <form class="w-full flex justify-end p-5">
+        <label
+            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            for="default-search"
+            >Search</label
+        >
+        <div class="relative w-2/6">
+            <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+                <svg
+                    aria-hidden="true"
+                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+            <input
+                id="default-search"
+                v-model="search"
+                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search User..."
+                required
+                type="search"
+            />
+            <button
+                class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="submit"
+            >
+                Search
+            </button>
+        </div>
+    </form>
+    <div
+        class="w-3/5 mx-auto relative overflow-x-auto shadow-md sm:rounded-lg flex flex-col"
+    >
         <table
             class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
@@ -61,7 +125,7 @@ onMounted(() => {});
                                 'storage/avatars/default_photo.jpg'
                             "
                             alt="Profile photo of {{ user.firstName }}"
-                            class="max-w-20 rounded"
+                            class="max-w-20 h-20 rounded"
                         />
                     </td>
                     <td class="px-6 py-4 font-medium whitespace-nowrap">
@@ -80,17 +144,22 @@ onMounted(() => {});
         </table>
     </div>
     <!--    Pagination link-->
-    <div>
-        <Link
-            v-for="link in users.links"
-            :key="link.label"
-            :class="{ 'bg-blue-400': link.active }"
-            :href="link.url"
-            class="mx-1 px-1 rounded"
-            v-html="link.label"
-        >
-        </Link>
-        >
+    <div class="flex justify-between mt-5">
+        <div class="ml-10">
+            <Link
+                v-for="link in users.links"
+                :key="link.label"
+                :class="{ 'bg-blue-400': link.active }"
+                :href="link.url"
+                class="mx-1 px-1 rounded"
+                v-html="link.label"
+            >
+            </Link>
+        </div>
+        <p class="justify-self-end mr-10">
+            Showing {{ users.from }} to {{ users.to }} of
+            {{ users.total }} results
+        </p>
     </div>
 </template>
 <style scoped></style>
