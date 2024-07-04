@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -77,7 +78,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = (new User())->destroyUser($id);
     }
 
     /**
