@@ -35,6 +35,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public static function when()
+    {
+    }
+
     public function store($validatedData)
     {
         return User::create($validatedData);
