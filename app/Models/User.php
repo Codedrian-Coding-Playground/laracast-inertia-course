@@ -4,11 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use softDeletes;
     use HasFactory;
     use Notifiable;
 
@@ -35,18 +37,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public static function when()
+    public function destroyUser($id)
     {
+        $user = User::where('id', $id)->delete();
     }
 
     public function store($validatedData)
     {
         return User::create($validatedData);
-    }
-
-    public function index()
-    {
-        return $response = User::paginate(5);
     }
 
     /**
