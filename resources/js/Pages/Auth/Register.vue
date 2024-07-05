@@ -35,7 +35,10 @@ function handleImage(event) {
                 <div class="shrink-0">
                     <img
                         id="preview_img"
-                        :src="form.avatarPreview"
+                        :src="
+                            form.avatarPreview ??
+                            'storage/avatars/default_photo.jpg'
+                        "
                         alt="Current profile photo"
                         class="h-16 w-16 object-cover rounded-full"
                     />

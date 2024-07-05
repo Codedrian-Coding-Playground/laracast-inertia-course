@@ -5,11 +5,6 @@ use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return inertia('Home', [
-            'isActive' => 'dashboard',
-        ]);
-    })->name('dashboard');
     Route::get('/profile', function () {
         return inertia('Profile', [
             'isActive' => 'profile',
@@ -17,6 +12,8 @@ Route::middleware('auth')->group(function () {
     })->name('profile');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 });
+
+Route::get('/', [UserController::class, 'index'])->name('dashboard');
 
 Route::resource('users', UserController::class)->middleware([HandlePrecognitiveRequests::class]);
 Route::inertia('/register', 'Auth/Register')->name('register');

@@ -11,12 +11,20 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return inertia('Home', [
+            'users' => User::query()->when($request->search, function ($query) use ($request) {
+                $query
+                    ->where('firstName', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            })->paginate(5)->withQueryString(),
+            'searchValue' => $request->Search
+        ]);
     }
 
     /**
@@ -70,7 +78,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = (new User())->destroyUser($id);
     }
 
     /**
@@ -82,7 +90,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials, $request->remember_me)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/');
+            return redirect()->intended('/')->with('greet', 'Welcome to Laravel Inertia domain,');
         }
 
         return back()->withErrors([

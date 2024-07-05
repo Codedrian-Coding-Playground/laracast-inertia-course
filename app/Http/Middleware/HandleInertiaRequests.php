@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -37,9 +39,18 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             // Lazily...
-            'auth.user' => fn () => $request->user()
+            'auth.user' => fn() => $request->user()
                 ? $request->user()->only('id', 'firstName', 'email')
                 : null,
+            'permissions' => [
+                'can' => [
+                    'delete_user' => Auth::user() ? Auth::user()->can('delete', User::class) : null
+                ]
+            ],
+            'flash' => [
+                'message' => fn() => $request->session()->get('greet')
+            ],
+
         ]);
     }
 }
