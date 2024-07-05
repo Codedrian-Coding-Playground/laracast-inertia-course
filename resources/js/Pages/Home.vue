@@ -19,6 +19,7 @@ defineProps({
     errors: Array,
     flash: String,
     auth: Object,
+    permissions: Object,
 });
 
 const search = ref("");
@@ -53,6 +54,7 @@ function deleteUser(id) {
             {{ $page.props.flash.message + " " + name + "!" }}
         </h2>
     </div>
+    <p>Email: {{ auth.user.email }}</p>
     <div class="flex justify-end">
         <Link
             :href="route('logout')"
@@ -118,7 +120,13 @@ function deleteUser(id) {
                     <tr>
                         <th class="px-6 py-3" scope="col">Photo</th>
                         <th class="px-6 py-3" scope="col">Name</th>
-                        <th class="px-6 py-3" scope="col">Email</th>
+                        <th
+                            v-if="permissions.can.delete_user"
+                            class="px-6 py-3"
+                            scope="col"
+                        >
+                            Email
+                        </th>
                         <th class="px-6 py-3" scope="col">Action</th>
                     </tr>
                 </thead>
@@ -138,7 +146,10 @@ function deleteUser(id) {
                             {{ user.firstName + " " + user.lastName }}
                         </td>
                         <td class="px-6 py-4">{{ user.email }}</td>
-                        <td class="px-6 py-4">
+                        <td
+                            v-if="permissions.can.delete_user"
+                            class="px-6 py-4"
+                        >
                             <button
                                 class="font-medium text-white bg-red-600 hover:bg-red-800 p-1 rounded"
                                 @click="deleteUser(user.id)"
