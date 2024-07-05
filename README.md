@@ -8,3 +8,4 @@
 - Scroll Management
 - Lodash
 - I learned how to use Conditional Clauses, the when() method that allows me to conditionally apply query constraint.
+- Practiced Laravel's Authorization :chef's kiss:"
